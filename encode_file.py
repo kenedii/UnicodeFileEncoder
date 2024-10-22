@@ -1,25 +1,27 @@
 import json
+import os
 
-# Load the hex to unicode mappings from the JSON file
-with open('hex_to_unicode.json', 'r', encoding='utf-8') as f:
-    hex_to_unicode = json.load(f)
+def get_filename(filepath=""):
+    filename = os.path.splitext(os.path.basename(filepath))[0] # Get the file name without file extension
+    file_extension = os.path.splitext(filepath)[1] # Get the file extension
 
-# Load the unicode to hex mappings from the JSON file
-with open('unicode_to_hex.json', 'r', encoding='utf-8') as f:
-    unicode_to_hex = json.load(f)
+    return filename, file_extension
 
-# Function to encode a file using the mappings
-def encode_file(input_file, output_file):
-    with open(input_file, 'rb') as f:
+def encode_file(filepath, mapping):
+    filename, file_extension = get_filename(filepath) # Retrieve the file name + extension
+
+    # Load the hex to unicode mappings from the JSON file
+    with open(f'{mapping}', 'r', encoding='utf-8') as f:
+        hex_to_unicode = json.load(f)
+
+    with open({filepath}, 'rb') as f: # Open the file to be encoded
         data = f.read()
 
     encoded_output = []
     for i in range(0, len(data), 2):
         # Get the next 4 bytes (or less if at the end of the file)
         byte_sequence = data[i:i+2]
-        #print(f"byte sequence: {byte_sequence}")
         hex_sequence = byte_sequence.hex().upper()  # Convert to hex string
-        #print(f"hex sequence {hex_sequence}")
         
         # Find the corresponding unicode character, or use a placeholder if not found
         unicode_char = hex_to_unicode.get(hex_sequence, '?')  # Use '?' if no mapping exists
@@ -30,14 +32,21 @@ def encode_file(input_file, output_file):
     encoded_string = ''.join(encoded_output)
 
     # Write the encoded string to the output file
-    with open(output_file, 'w', encoding='utf-8') as f:
+    with open(f'{filename}_ENCODED{file_extension}', 'w', encoding='utf-8') as f:
         f.write(encoded_string)
 
-    print(f"Encoded output saved to '{output_file}'")
+    print(f"Encoded output saved to '{filename}_ENCODED{file_extension}'")
+
 
 # Function to decode a file using the mappings
-def decode_file(input_file, output_file):
-    with open(input_file, 'r', encoding='utf-8') as f:
+def decode_file(filepath, mapping):
+    filename, file_extension = get_filename(filepath) # Retrieve the file name + extension
+
+    # Load the unicode to hex mappings from the JSON file
+    with open(f'{mapping}', 'r', encoding='utf-8') as f:
+        unicode_to_hex = json.load(f)
+
+    with open(filepath, 'r', encoding='utf-8') as f:
         encoded_data = f.read()
 
     decoded_output = bytearray()
@@ -49,12 +58,17 @@ def decode_file(input_file, output_file):
         else:
             # If no mapping exists, add a placeholder 
             decoded_output.extend(b'\x00')  # Placeholder for unknown characters
+    
+    if filename.endswith("_ENCODED"):
+        decoded_filename = filename.split["_ENCODED"][0]
+    else:
+        decoded_filename = filename
 
     # Write the decoded bytes to the output file
-    with open(output_file, 'wb') as f:
+    with open(f'{decoded_filename}{file_extension}', 'wb') as f:
         f.write(decoded_output)
 
-    print(f"Decoded output saved to '{output_file}'")
+    print(f"Decoded output saved to '{decoded_filename}'")
 
 
 input_file_path = 'encoded_output1.txt'  #  input binary file path
