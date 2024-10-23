@@ -60,7 +60,7 @@ def decode_file(filepath, mapping):
             decoded_output.extend(b'\x00')  # Placeholder for unknown characters
     
     if filename.endswith("_ENCODED"):
-        decoded_filename = filename.split["_ENCODED"][0]
+        decoded_filename = filename.split("_ENCODED")[0]
     else:
         decoded_filename = filename
 
