@@ -14,7 +14,7 @@ def encode_file(filepath, mapping):
     with open(f'{mapping}', 'r', encoding='utf-8') as f:
         hex_to_unicode = json.load(f)
 
-    with open({filepath}, 'rb') as f: # Open the file to be encoded
+    with open(f'{filepath}', 'rb') as f: # Open the file to be encoded
         data = f.read()
 
     encoded_output = []
@@ -71,13 +71,12 @@ def decode_file(filepath, mapping):
     print(f"Decoded output saved to '{decoded_filename}'")
 
 
-input_file_path = 'encoded_output1.txt'  #  input binary file path
-output_file_path = 'encoded_output.txt'  #  output filename
-encode_file(input_file_path, output_file_path)
+#input_file_path = 'encoded_output1.txt'  #  input binary file path
+#output_file_path = 'encoded_output.txt'  #  output filename
+#encode_file(input_file_path, output_file_path)
 
 
 """
-# Example usage for decoding (uncomment to use)
 encoded_file_path = 'encoded_output.txt'  # File to decode
 decoded_file_path = 'testcsv.csv'  # Desired output file name for decoded data
 decode_file(encoded_file_path, decoded_file_path)
