@@ -19,7 +19,7 @@ root.geometry("800x600")
 # Functions to handle file selection and updating UI
 def select_file():
     global file_path
-    file_path = str(filedialog.askopenfilename(title="Select File"))
+    file_path = filedialog.askopenfilename(title="Select File")
     file_entry.configure(state='normal')
     file_entry.delete(0, ctk.END)
     file_entry.insert(0, file_path)
