@@ -1,5 +1,11 @@
 import customtkinter as ctk
 from tkinter import filedialog
+import create_mappings
+import encode_file
+import os
+
+if not os.path.exists("mappings/default/hex_to_unicode.json"): # If the default mappings dont exist
+    create_mappings.create_encode_dict() # Create encode + decode mapping dicts
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
